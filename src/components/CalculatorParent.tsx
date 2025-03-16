@@ -3,9 +3,23 @@ import CalculatorDisplay from "./CalculatorDisplay";
 import CalculatorButtons from "./CalculatorButtons";
 import { useState } from "react";
 
-const calculateTotal = (values: (string | number)[], displayText: string) => {
-    const newValues = [...values, Number(displayText)];
-    const equation = newValues.map((val) => val === 'x' ? '*' : val).join('');
+type GetEquationProps = {
+    values: (string | number)[];
+    displayText: string;
+}
+
+interface CalculateTotalProps extends GetEquationProps {
+    setEquationDisplay: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const getEquation = ({values, displayText}: GetEquationProps) => {
+    const newValues = [...values, displayText];
+    return newValues.map((val) => val === 'x' ? '*' : val).join('');
+}
+
+const calculateTotal = ({values, displayText, setEquationDisplay}: CalculateTotalProps) => {
+    const equation = getEquation({values, displayText});
+    setEquationDisplay(equation);
     const total = eval(equation);
     const isWholeNumber = Number.isInteger(total);
     return isWholeNumber ? total : total.toFixed(2);
@@ -16,8 +30,13 @@ const Calculator = () => {
     const [displayText, setDisplayText] = useState("0");
     const [values, setValues] = useState<(string | number)[] >([]);
     const [isNewNumber, setIsNewNumber] = useState(false);
+    const [equationDisplay, setEquationDisplay] = useState('');
 
     const buttonOnClick = (text: string) => {
+        if(!text) {
+            return;
+        }
+        
         if(text === "AC")  {
             resetCalculator();
             return;
@@ -30,10 +49,9 @@ const Calculator = () => {
 
         // Get the total
         if(userWantsTotal) {
-            const total = calculateTotal(values, displayText);
+            const total = calculateTotal({values, displayText, setEquationDisplay});
             setDisplayText(total);
             setValues([]);
-            // setHasTotal(true);
             return;
         }
 
@@ -56,6 +74,7 @@ const Calculator = () => {
         }
         
         // Input was an operator so save the operator and the number
+        setEquationDisplay(getEquation({values, displayText: displayText + text}))
         setValues(prevValues => [
             ...prevValues,
             ...[Number(displayText), text]
@@ -68,12 +87,13 @@ const Calculator = () => {
         setDisplayText("0");
         setValues([]);
         setIsNewNumber(false);
+        setEquationDisplay('');
     }
 
     return (
         <CalculatorContainer>
             <CalculatorInner>
-                <CalculatorDisplay displayText={displayText}/>
+                <CalculatorDisplay displayText={displayText} equationDisplay={equationDisplay}/>
                 <CalculatorButtons buttonOnClick={buttonOnClick} />
             </CalculatorInner>
         </CalculatorContainer>
@@ -90,6 +110,7 @@ const CalculatorContainer = styled.div`
 
 const CalculatorInner = styled.div`
     background-color: #111111;
+    border-radius: 10px;
     margin: 30px;
 `;
 

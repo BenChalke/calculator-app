@@ -27,26 +27,31 @@ const CalculatorButtonsContainer = styled.div`
 `;
 
 const CalculatorButtonsInner = styled.div`
-    margin: 2vw;
+    margin: 20px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
 `;
 
 const ButtonContainer = styled.div`
-    padding: 0.5vw;
+    padding: 5px;
     display: flex;
     justify-content: space-around;
 `;
 
 const StyledButton = styled.button`
-    width: 5vw;
-    height: 5vw;
-    font-size: 2vw;
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
     border-radius: 50%;
     border: none;
     background-color: #6f6f6f;
     color: white;
+
+    @media screen and (max-width: 400px) {
+        width: 60px;
+        height: 60px;
+    }
 
     &:hover {
         background-color: #333333;

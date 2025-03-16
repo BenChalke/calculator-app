@@ -3,7 +3,7 @@ import styled from "styled-components";
 const Header = () => {
     return (
         <HeaderContainer>
-            <h1>Calculator</h1>
+            <h1>Calculator App</h1>
         </HeaderContainer>
     )
 }
