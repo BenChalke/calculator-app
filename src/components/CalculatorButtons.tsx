@@ -52,14 +52,18 @@ const StyledButton = styled.button`
         width: 60px;
         height: 60px;
     }
-
-    &:hover {
-        background-color: #333333;
-    }
-
+    
     &:active {
         background-color: rgba(255, 255, 255, 0.7);
     }
+    
+    // Only have this for desktop - cant hover on touch screen
+    @media screen and (min-width: 767px) {  
+        &:hover {
+            background-color: #333333;
+        }
+    }
+   
 `;
 
 export default CalculatorButtons;
